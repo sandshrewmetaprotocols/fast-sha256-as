@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs-extra";
 import { EventEmitter } from "events";
 import { hash } from "fast-sha256";
+import { expect } from "chai";
 
 const WASM_BINARY = fs.readFileSync(path.join(__dirname, '..', 'build', 'debug.wasm'));
 
@@ -18,7 +19,6 @@ describe("metashrew index", () => {
     indexer.setBlockHeight(0);
     const logPromise = new Promise((resolve) => indexer.on("log", (v) => resolve(v)));
     const result = await indexer.run('test_sha256');
-    console.log('0x' + Buffer.from(hash(tx)).toString('hex'));
-    console.log(await logPromise);
+    expect(await logPromise).to.eql('0x' + Buffer.from(hash(tx)).toString('hex'));
   });
 });
