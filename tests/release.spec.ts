@@ -2,7 +2,7 @@ import { IndexerProgram } from "metashrew-test";
 import path from "path";
 import fs from "fs-extra";
 import { EventEmitter } from "events";
-import { hash } from "fast-sha256-js";
+import { hash } from "fast-sha256";
 
 const WASM_BINARY = fs.readFileSync(path.join(__dirname, '..', 'build', 'debug.wasm'));
 

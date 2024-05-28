@@ -14,8 +14,6 @@
 //   new sha256.Hash()
 //   new sha256.HMAC(key)
 //
-export const digestLength: number = 32;
-export const blockSize: number = 64;
 
 // SHA-256 constants
 const K: u32[] = [
@@ -34,10 +32,10 @@ const K: u32[] = [
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 ];
 
-function hashBlocks(w: Int32Array, v: Int32Array, p: Uint8Array, pos: number, len: number): number {
-  let a: number, b: number, c: number, d: number, e: number,
-      f: number, g: number, h: number, u: number, i: number,
-      j: number, t1: number, t2: number;
+function hashBlocks(w: Int32Array, v: Int32Array, p: Uint8Array, pos: i32, len: i32): i32 {
+  let a: i32, b: i32, c: i32, d: i32, e: i32,
+      f: i32, g: i32, h: i32, u: i32, i: i32,
+      j: i32, t1: i32, t2: i32;
   while (len >= 64) {
     a = v[0];
     b = v[1];
@@ -99,19 +97,26 @@ function hashBlocks(w: Int32Array, v: Int32Array, p: Uint8Array, pos: number, le
 
 // Hash implements SHA256 hash algorithm.
 export class Hash {
-    digestLength: number = digestLength;
-    blockSize: number = blockSize;
+    public digestLength: i32;
+    public blockSize: i32;
 
     // Note: Int32Array is used instead of Uint32Array for performance reasons.
-    private state: Int32Array = new Int32Array(8); // hash state
-    private temp: Int32Array = new Int32Array(64); // temporary state
-    private buffer: Uint8Array = new Uint8Array(128); // buffer for data to hash
-    private bufferLength: number  = 0; // number of bytes in buffer
-    private bytesHashed: number = 0; // number of total bytes hashed
+    private state: Int32Array; // hash state
+    private temp: Int32Array; // temporary state
+    private buffer: Uint8Array; // buffer for data to hash
+    private bufferLength: i32; // number of bytes in buffer
+    private bytesHashed: i32; // number of total bytes hashed
 
     finished: boolean = false; // indicates whether the hash was finalized
 
     constructor() {
+        this.digestLength = 32;
+	this.blockSize = 64;
+	this.state = new Int32Array(8);
+	this.temp = new Int32Array(64);
+	this.buffer = new Uint8Array(128);
+	this.bufferLength = 0;
+	this.bytesHashed = 0;
         this.reset();
     }
 
@@ -150,7 +155,7 @@ export class Hash {
     //
     // Throws error when trying to update already finalized hash:
     // instance must be reset to use it again.
-    update(data: Uint8Array, dataLength: number = data.length): this {
+    update(data: Uint8Array, dataLength: i32 = data.length): this {
         if (this.finished) {
             throw new Error("SHA256: can't update because hash was finished.");
         }
