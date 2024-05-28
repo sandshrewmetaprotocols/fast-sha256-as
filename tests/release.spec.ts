@@ -5,22 +5,16 @@ import { EventEmitter } from "events";
 
 const WASM_BINARY = fs.readFileSync(path.join(__dirname, '..', 'build', 'debug.wasm'));
 
-const makeIndexer = () => {
-  const indexer = new IndexerProgram(
-    new Uint8Array(Array.from(WASM_BINARY)).buffer,
-  );
-  indexer.on("log", (v) => console.log(v));
-  indexer.setBlock('0x');
-  indexer.setBlockHeight(0);
-  return indexer;
-};
 
 describe("metashrew index", () => {
-  const makeTest = (s) => it(s, async () => {
-    const indexer = makeIndexer();
-    const result = await indexer.run(s);
+  it('should sha256', async () => {
+    const indexer = new IndexerProgram(
+      new Uint8Array(Array.from(WASM_BINARY)).buffer,
+    );
+    indexer.setBlock('0x');
+    indexer.setBlockHeight(0);
+    const logPromise = new Promise((resolve) => indexer.on("log", (v) => resolve(v)));
+    const result = await indexer.run('test_sha256');
+    console.log(await logPromise);
   });
-  [
-    "test_sha256"
-  ].forEach((v) => makeTest(v));
 });
