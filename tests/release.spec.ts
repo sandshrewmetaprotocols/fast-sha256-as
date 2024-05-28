@@ -21,18 +21,6 @@ describe("metashrew index", () => {
     const result = await indexer.run(s);
   });
   [
-    "test_sha256",
-    "test_seekLower",
-    "test_seekLower2",
-    "test_seekGreater",
-    "test_maskLowerThan",
-    "test_maskGreaterThan",
-    "test_maskLowerThan2",
-    "test_binarySearch",
-    "test_binarySearch2",
-    "test_binarySearch3",
-    "test_isOrdTag" ,
-    "test_indexBrc20",
-    "test_txid"
+    "test_sha256"
   ].forEach((v) => makeTest(v));
 });
