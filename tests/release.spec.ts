@@ -18,15 +18,6 @@ const tx = new Uint8Array(
   ),
 );
 
-function swap32(val) {
-  return (
-    ((val & 0xff) << 24) |
-    ((val & 0xff00) << 8) |
-    ((val >> 8) & 0xff00) |
-    ((val >> 24) & 0xff)
-  );
-}
-
 describe("metashrew index", () => {
   it("should sha256", async () => {
     const indexer = new IndexerProgram(
@@ -35,12 +26,11 @@ describe("metashrew index", () => {
     indexer.setBlock("0x");
     indexer.setBlockHeight(0);
     const logPromise: Promise<any> = new Promise((resolve) =>
-      indexer.on("log", (v) => resolve(v)),
+      indexer.on("log", (v) => resolve(v.substr(v, v.length - 1))),
     );
     const result: any = await indexer.run("test_sha256");
     const _hash = "0x" + Buffer.from(hash(tx)).toString("hex");
     const resultHash: string = await logPromise;
-    console.log(resultHash[resultHash.length - 1].charCodeAt(0));
-    expect(resultHash.slice(0, resultHash.length - 1)).to.be.equal(_hash);
+    expect(resultHash).to.be.equal(_hash);
   });
 });
