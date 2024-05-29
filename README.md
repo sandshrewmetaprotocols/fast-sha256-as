@@ -2,8 +2,6 @@
 
 AssemblyScript port of fast-sha256-js.
 
-(WIP -- Do not use yet in production)
-
 ## Usage
 
 ```js
